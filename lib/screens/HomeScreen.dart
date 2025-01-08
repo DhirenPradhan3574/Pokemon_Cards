@@ -81,11 +81,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   style: const TextStyle(fontSize: 12,fontFamily: "Poppins"),
                   onChanged: (query){
-                    setState(() {
-                      print("dhiren query $query");
-                      ref.read(searchQueryProvider.notifier).state = query;
-                      searchQuery = query;
-                      currentPage = 1;
+                    if (_debounce?.isActive ?? false) _debounce!.cancel();
+                    _debounce = Timer(Duration(milliseconds: 3000), () {
+                      setState(() {
+                        ref.read(searchQueryProvider.notifier).state = query;
+                        searchQuery = query;
+                        currentPage = 1;
+                      });
                     });
                   },// Smaller font size
                   // onChanged: _onSearchChanged,
